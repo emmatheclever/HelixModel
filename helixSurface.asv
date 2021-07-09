@@ -1,0 +1,15 @@
+function [hel_x, hel_y, hel_z] = helixSurface(R, h, a, N_tot)
+%helixSurface defines the surface of a 3-d helix along z axis
+%   R winding radius of helix
+%   h pitch of helix (maybe)
+%   a radius of wrapped cylinder
+
+    t = 0
+
+    hel_x = @(t,u) R*cos(t) - a*cos(t)*cos(u) + ((h^2+R^2)^-0.5)*h*a*sin(t)*sin(u)
+    hel_y = @(t,u) R*sin(t) - a*sin(t)*cos(u) + ((h^2+R^2)^-0.5)*h*a*cos(t)*sin(u)
+    hel_z = @(t,u) h*t + ((h^2+R^2)^-0.5)*R*a*sin(u)
+
+    
+end
+
