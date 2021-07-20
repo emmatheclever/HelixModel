@@ -2,14 +2,19 @@
 % Emma Waters 7.14.2021
 
 %%% Defining Constants
-N_tot = 5           % # Rotations
-N_seg = 13          % # Separators
+N_tot = 1.5          % # Rotations
+N_seg = 7          % # Separators
 a = 10              % radius of separators
-N_mcK = 3           % # McKibben Muscles
+N_mcK = 4           % # McKibben Muscles
 
 % Colors of muscles in order
-mcK_colors = {[0.9100    0.4100    0.1700], [0.831, 0.831, 0.831],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25], [0.811, 0.333, 0.027], [0.811, 0.333, 0.027]};
+mcK_colors = {[0.25, 0.25, 0.25], [0.9100    0.4100    0.1700], [0.831, 0.831, 0.831],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25], [0.811, 0.333, 0.027], [0.811, 0.333, 0.027]};
 
+% Contraction coefficients for each muscle (column vector)
+c_coeffs = [0.5; 0.5; 0; 0]
+
+%%% Do you want to show body surface?
+show_Body = 0
 
 %%% paramter constraints and such
 u_max = N_tot*2*pi;             % max u value
@@ -17,14 +22,20 @@ u_inc = u_max/(100);            % increments of u
 u_vals = 0:u_inc:u_max;         % u values to plot
 theta_m = 2*pi/N_mcK;           % angle between each muscle (counterclockwise, first muscle at 0*pi)
 
-%Find Helix characteristics
-syms p
-R = 10                          % Center Winding Radius - should come from weighted average of muscle vectors
-h = solve(pi*R*N_tot == ((p*u_max+R)^1.5 - R^1.5)/(3*p), p)              % pitch - should come from R
-rot = 0                         % angle between m1 vector and normal vector
+%%%Find Helix characteristics
+% Winding radius
+m_vecs = zeros(2, N_mcK)
+for i = 1:N_mcK
+    m_vecs(:,i) = a.*[cos((pi/2) - (i-1)*theta_m); sin((pi/2) - (i-1)*theta_m)]
+end
 
-%%% Do you want to show body surface?
-show_Body = 0
+R_vec = m_vecs*c_coeffs
+R = norm(R_vec)
+rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a))                         % angle between m1 vector and normal vector
+
+% pitch 
+syms p
+h = vpasolve(N_tot*pi*R == ((p*u_max+R)^1.5 - R^1.5)/(3*p), p)
 
 
 %%%%%%% Plot Body Surface %%%%%%%%%%%%
@@ -72,6 +83,6 @@ for m = 1:N_mcK
         color = [0.25, 0.25, 0.25]
     end
     
-    plot3(ax, X(theta_m*(m-1) + rot, u_vals), Y(theta_m*(m-1) + rot, u_vals), Z(theta_m*(m-1) + rot, u_vals), "LineWidth", 4, "Color", color)
+    plot3(ax, X(theta_m*(m-1) + rot, u_vals), Y(theta_m*(m-1) + rot, u_vals), Z(theta_m*(m-1) + rot, u_vals), "LineWidth", 8, "Color", color)
     
 end
