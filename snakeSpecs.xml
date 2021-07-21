@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<snake>
+    
+    <!-- This is where the specifics of a snake design go. -->
+    
+    <mLength> 230 </mLength>
+    <nMuscles> 4 </nMuscles>
+    <nSeparators> 7 </nSeparators>
+    <rSeparators> 20 </rSeparators>
+    <nMuscleRotations> 1.5 </nMuscleRotations>
+    <hMuscle>  </hMuscle>
+    <cCoeffs> 0.7, 0, 0, 0 </cCoeffs>
+    <showBody> 0 </showBody>
+    
+    <!-- To format colors, use RGB normalized decimals separated by commas and separate each color with '/'  -->
+    <muscleColors> 0.25, 0.25, 0.25 / 0.9100, 0.4100, 0.1700 / 0.831, 0.831, 0.831 / 0.25, 0.25, 0.25 / 0.25, 0.25, 0.25/ 0.811, 0.333, 0.027 / 0.811, 0.333, 0.027 </muscleColors>
+</snake>

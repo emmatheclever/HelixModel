@@ -1,20 +1,39 @@
 %%%%%%%%%%%%%% Drawing the Snake %%%%%%%%%%
-% Emma Waters 7.14.2021
+% Emma Waters, OSU LRAM, 7.21.2021
+% github.com/emmatheclever
 
-%%% Defining Constants
-N_tot = 1.5          % # Rotations
-N_seg = 7          % # Separators
-a = 10              % radius of separators
-N_mcK = 4           % # McKibben Muscles
+%%% Import snake specs
+specs = xml2struct("snakeSpecs.xml")
 
+%%% Defining Constants (using some messy text converstion)
+N_tot =  textscan(specs.snake.nMuscleRotations.Text, '%f')         % # Rotations
+N_seg =  textscan(specs.snake.nSeparators.Text, '%f')              % # Separators
+a =      textscan(specs.snake.rSeparators.Text, '%f')              % radius of separators
+N_mcK =  textscan(specs.snake.nMuscles.Text, '%f')                 % # McKibben Muscles
+
+N_tot = N_tot{1}
+N_seg = N_seg{1}
+a = a{1}
+N_mcK = N_mcK{1}
+
+% TODO: bring in colors from xml
 % Colors of muscles in order
-mcK_colors = {[0.25, 0.25, 0.25], [0.9100    0.4100    0.1700], [0.831, 0.831, 0.831],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25], [0.811, 0.333, 0.027], [0.811, 0.333, 0.027]};
+%{
+RGBdecimals = textscan(specs.snake.muscleColors.Text, '%s', 'Delimiter', '/')
+mcK_colors = cell(1, length(RGBdecimals))
+for i=1:length(RGBdecimals)
+    mcK_colors{i} = textscan(RGBdecimals(i), '%f', 'Delimiter',',' ).'
+end
+%}
+mcK_colors = {[0.25, 0.25, 0.25], [0.9100, 0.4100, 0.1700], [0.831, 0.831, 0.831], [0.25, 0.25, 0.25], [0.25, 0.25, 0.25]}
 
 % Contraction coefficients for each muscle (column vector)
-c_coeffs = [0.5; 0.5; 0; 0]
+c_coeffs = textscan(specs.snake.cCoeffs.Text, '%f', 'Delimiter',',' )
+c_coeffs = c_coeffs{1}
 
 %%% Do you want to show body surface?
-show_Body = 0
+show_Body = textscan(specs.snake.showBody.Text, '%f')
+show_Body = show_Body{1}
 
 %%% paramter constraints and such
 u_max = N_tot*2*pi;             % max u value
@@ -22,7 +41,9 @@ u_inc = u_max/(100);            % increments of u
 u_vals = 0:u_inc:u_max;         % u values to plot
 theta_m = 2*pi/N_mcK;           % angle between each muscle (counterclockwise, first muscle at 0*pi)
 
-%%%Find Helix characteristics
+
+
+%%% Find Helix characteristics %%%%%%%%%%%%
 % Winding radius
 m_vecs = zeros(2, N_mcK)
 for i = 1:N_mcK
@@ -35,8 +56,7 @@ rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a))                         % angle be
 
 % pitch 
 syms p
-h = vpasolve(N_tot*pi*R == ((p*u_max+R)^1.5 - R^1.5)/(3*p), p)
-
+h = vpasolve(N_tot*(p^2+(2*pi*R)^2)^0.5 == 2*((p*u_max+R)^1.5 - R^1.5)/(3*p), p)
 
 %%%%%%% Plot Body Surface %%%%%%%%%%%%
 
