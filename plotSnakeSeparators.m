@@ -19,4 +19,5 @@ function body = plotSnakeSeparators(ax, R, h, a, t_max, N_seg)
     
     body = plot3(ax, hel_x, hel_y, hel_z, "LineWidth", 2, 'Color', [17 17 17]/255)
     
+    view(ax, 3)
 end

@@ -6,10 +6,10 @@
     <mLength> 230 </mLength>
     <nMuscles> 4 </nMuscles>
     <nSeparators> 7 </nSeparators>
-    <rSeparators> 20 </rSeparators>
+    <rSeparators> 13 </rSeparators>
     <nMuscleRotations> 1.5 </nMuscleRotations>
     <hMuscle>  </hMuscle>
-    <cCoeffs> 0.7, 0, 0, 0 </cCoeffs>
+    <cCoeffs> 0, 0, 1, 1 </cCoeffs>
     <showBody> 0 </showBody>
     
     <!-- To format colors, use RGB normalized decimals separated by commas and separate each color with '/'  -->

@@ -25,7 +25,7 @@ for i=1:length(RGBdecimals)
     mcK_colors{i} = textscan(RGBdecimals(i), '%f', 'Delimiter',',' ).'
 end
 %}
-mcK_colors = {[0.25, 0.25, 0.25], [0.9100, 0.4100, 0.1700], [0.831, 0.831, 0.831], [0.25, 0.25, 0.25], [0.25, 0.25, 0.25]}
+mcK_colors = {[0.9100, 0.4100, 0.1700], [0.25, 0.25, 0.25], [0.25, 0.25, 0.25],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25]}
 
 % Contraction coefficients for each muscle (column vector)
 c_coeffs = textscan(specs.snake.cCoeffs.Text, '%f', 'Delimiter',',' )
@@ -52,18 +52,18 @@ end
 
 R_vec = m_vecs*c_coeffs
 R = norm(R_vec)
-rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a))                         % angle between m1 vector and normal vector
+rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a))       % angle between m1 vector and normal vector
 
 % pitch 
 syms p
-h = vpasolve(N_tot*(p^2+(2*pi*R)^2)^0.5 == 2*((p*u_max+R)^1.5 - R^1.5)/(3*p), p)
+h = vpasolve(pi*R*N_tot == ((p*u_max+R)^1.5 - R^1.5)/(3*p), p);
 
 %%%%%%% Plot Body Surface %%%%%%%%%%%%
 
 %%% Setting up axes
-f = figure(1)
+f = figure(1);
 clf(f,'reset')
-ax = axes('Parent', f)
+ax = axes('Parent', f);
 set(ax,'DataAspectRatio',[1 1 1])
 box(ax, 'on')
 hold on
@@ -72,8 +72,7 @@ hold on
 if show_Body == 0
     body = plotSnakeSeparators(ax, R, h, a, u_max, N_seg);
 else
-    [hel_x, hel_y, hel_z] = helixSurface(R, h, a, N_tot);
-    body = surf(ax, hel_x, hel_y, hel_z)
+    body = helixSurface(ax, R, h, a, N_tot);
 end
 
 grid on
@@ -84,14 +83,14 @@ view(ax, 3)
 
 %%% Helical Surface equations
 syms x(t) y(t) z(t)
-x(t) = R-a*cos(t)
-y(t) = -(h*a*sin(t))*(R^2+h^2)^(-0.5)
-z(t) = (R*a*sin(t))*(R^2+h^2)^(-0.5)
+x(t) = R-a*cos(t);
+y(t) = -(h*a*sin(t))*(R^2+h^2)^(-0.5);
+z(t) = (R*a*sin(t))*(R^2+h^2)^(-0.5);
 
 syms X(t, u) Y(t,u) Z(t,u)
-X(t,u) = x(t)*cos(u) - y(t)*sin(u)
-Y(t,u) = x(t)*sin(u) + y(t)*cos(u)
-Z(t,u) = z(t) + h*u
+X(t,u) = x(t)*cos(u) - y(t)*sin(u);
+Y(t,u) = x(t)*sin(u) + y(t)*cos(u);
+Z(t,u) = z(t) + h*u;
 
 
 %%% Plotting muscles
@@ -103,6 +102,10 @@ for m = 1:N_mcK
         color = [0.25, 0.25, 0.25]
     end
     
-    plot3(ax, X(theta_m*(m-1) + rot, u_vals), Y(theta_m*(m-1) + rot, u_vals), Z(theta_m*(m-1) + rot, u_vals), "LineWidth", 8, "Color", color)
+    plot3(ax, X(theta_m*(m-1) + rot, u_vals), Y(theta_m*(m-1) + rot, u_vals), Z(theta_m*(m-1) + rot, u_vals), "LineWidth", 6, "Color", color);
     
+    disp((theta_m*(m-1)+rot)/pi)
 end
+
+plot3(ax, X(0, u_vals), Y(0, u_vals), Z(0, u_vals),"k--", "LineWidth", 7, "Color", "r")
+    
