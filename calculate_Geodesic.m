@@ -1,6 +1,7 @@
 function [Dpsi_pos, Dpsi_neg] = calculate_Geodesic(xt, yt, zt , h, t_0, psi_0, Dpsi_0)
 %CALCULATE_GEODESIC Calculates the geodesic along a helical surface given
 %an initial point and angle:
+%   NOTE: This isn't used for the snake model, but I wanted to keep it
 %
 %   Input:
 %   x, y, z             symbolic parameterization of a cross section of the surface

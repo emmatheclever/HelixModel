@@ -2,77 +2,65 @@
 % Emma Waters, OSU LRAM, 7.21.2021
 % github.com/emmatheclever
 
-%%% Import snake specs
-specs = xml2struct("snakeSpecs.xml")
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%  User Input here: %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defining Constants
+N_tot =  1.7            % # Rotations
+N_seg =  6              % # Separators
+a =      1             % radius of separators
+N_mcK =  4              % # McKibben Muscles (must be at least 3)
 
-%%% Defining Constants (using some messy text converstion)
-N_tot =  textscan(specs.snake.nMuscleRotations.Text, '%f')         % # Rotations
-N_seg =  textscan(specs.snake.nSeparators.Text, '%f')              % # Separators
-a =      textscan(specs.snake.rSeparators.Text, '%f')              % radius of separators
-N_mcK =  textscan(specs.snake.nMuscles.Text, '%f')                 % # McKibben Muscles
-
-N_tot = N_tot{1}
-N_seg = N_seg{1}
-a = a{1}
-N_mcK = N_mcK{1}
-
-% TODO: bring in colors from xml
-% Colors of muscles in order
-%{
-RGBdecimals = textscan(specs.snake.muscleColors.Text, '%s', 'Delimiter', '/')
-mcK_colors = cell(1, length(RGBdecimals))
-for i=1:length(RGBdecimals)
-    mcK_colors{i} = textscan(RGBdecimals(i), '%f', 'Delimiter',',' ).'
-end
-%}
+%McKibben Info - Note: order of muscles is counterclockwise.
+mcK_rest_length = 36    % length of unactuated muscle
+mcK_act_length  = 26  % length at maximum contraction
 mcK_colors = {[0.9100, 0.4100, 0.1700], [0.25, 0.25, 0.25], [0.25, 0.25, 0.25],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25]}
 
 % Contraction coefficients for each muscle (column vector)
-c_coeffs = textscan(specs.snake.cCoeffs.Text, '%f', 'Delimiter',',' )
-c_coeffs = c_coeffs{1}
+c_coeffs = [1;0;0;0]
 
 %%% Do you want to show body surface?
-show_Body = textscan(specs.snake.showBody.Text, '%f')
-show_Body = show_Body{1}
+show_Body = 0
 
-%%% paramter constraints and such
-u_max = N_tot*2*pi;             % max u value
-u_inc = u_max/(100);            % increments of u
-u_vals = 0:u_inc:u_max;         % u values to plot
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Run this now.... %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Some helpful variables
+m_lengths = calculateLengths(N_mcK, c_coeffs, mcK_rest_length, mcK_act_length)
 theta_m = 2*pi/N_mcK;           % angle between each muscle (counterclockwise, first muscle at 0*pi)
 
-
-
 %%% Find Helix characteristics %%%%%%%%%%%%
-% Winding radius
-m_vecs = zeros(2, N_mcK)
-for i = 1:N_mcK
-    m_vecs(:,i) = a.*[cos((pi/2) - (i-1)*theta_m); sin((pi/2) - (i-1)*theta_m)]
+m_vecs = getMuscleVecs(N_mcK, a, theta_m)
+
+R_vec = getWindingRadius(m_vecs, c_coeffs)
+R = norm(R_vec)      
+if R == 0
+    rot = 0          % angle between m1 vector and normal vector
+else 
+    rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a))
 end
 
-R_vec = m_vecs*c_coeffs
-R = norm(R_vec)
-rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a))       % angle between m1 vector and normal vector
+[p, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_tot)
+h = p/(2*pi)
 
-% pitch 
-syms p
-h = vpasolve(pi*R*N_tot == ((p*u_max+R)^1.5 - R^1.5)/(3*p), p);
+u_max = l_v/sqrt((R-a)^2+h^2)
+
+%%% Helical Surface equations
+[X, Y, Z] = getSurfaceFunction(R, h, a)
 
 %%%%%%% Plot Body Surface %%%%%%%%%%%%
-
-%%% Setting up axes
-f = figure(1);
-clf(f,'reset')
-ax = axes('Parent', f);
-set(ax,'DataAspectRatio',[1 1 1])
+ax = createAxes(1)
 box(ax, 'on')
 hold on
 
-%%% Plot surface/separators
+%%% Plot surface/separatorsu
 if show_Body == 0
-    body = plotSnakeSeparators(ax, R, h, a, u_max, N_seg);
+    body = plotSnakeSeparators(ax, X, Y, Z, u_max, N_seg);
+    m_width = 6
 else
-    body = helixSurface(ax, R, h, a, N_tot);
+    body = fmesh(ax, X, Y, Z, [0, 2*pi, 0, u_max]);
+    m_width = 3
 end
 
 grid on
@@ -80,32 +68,6 @@ axis equal
 axis padded
 view(ax, 3)
 
-
-%%% Helical Surface equations
-syms x(t) y(t) z(t)
-x(t) = R-a*cos(t);
-y(t) = -(h*a*sin(t))*(R^2+h^2)^(-0.5);
-z(t) = (R*a*sin(t))*(R^2+h^2)^(-0.5);
-
-syms X(t, u) Y(t,u) Z(t,u)
-X(t,u) = x(t)*cos(u) - y(t)*sin(u);
-Y(t,u) = x(t)*sin(u) + y(t)*cos(u);
-Z(t,u) = z(t) + h*u;
-
-
 %%% Plotting muscles
-for m = 1:N_mcK
-    
-    if m < length(mcK_colors)
-        color = mcK_colors{m}
-    else
-        color = [0.25, 0.25, 0.25]
-    end
-    
-    plot3(ax, X(theta_m*(m-1) + rot, u_vals), Y(theta_m*(m-1) + rot, u_vals), Z(theta_m*(m-1) + rot, u_vals), "LineWidth", 6, "Color", color);
-    
-    disp((theta_m*(m-1)+rot)/pi)
-end
-
-plot3(ax, X(0, u_vals), Y(0, u_vals), Z(0, u_vals),"k--", "LineWidth", 7, "Color", "r")
+muscles = plotMuscles(ax, N_mcK, mcK_colors, X, Y, Z, u_max, theta_m, rot, m_width)
     
