@@ -17,7 +17,7 @@ function muscles = plotMuscles(ax, N_mcK, mcK_colors, X, Y, Z, u_max, theta_m, r
         end
 
         muscles{m} = plot3(ax, X(theta_m*(m-1) + rot, u_vals), Y(theta_m*(m-1) + rot, u_vals),...
-            Z(theta_m*(m-1) + rot, u_vals), "LineWidth", m_width, "Color", color);
+            Z(theta_m*(m-1) + rot, u_vals), "LineWidth", m_width, "Color", color, 'Visible', 'off');
     end
     
 end

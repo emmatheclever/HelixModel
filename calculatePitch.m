@@ -8,8 +8,8 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
     %Find closest muscle vectors to R_vec:
     min1 = Inf;
     min2 = Inf;
-    closer = 0
-    closest = 1
+    closer = 0;
+    closest = 1;
     
     for m = 1:N_mcK
         theta_R = acos(dot(R_vec, m_vecs(:,m)) / (R * a));

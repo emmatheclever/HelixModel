@@ -6,16 +6,14 @@ function separators = plotSnakeSeparators(ax, X, Y, Z, u_max, N_seg)
 %   h pitch of helix (maybe)
 %   a radius of wrapped cylinder
 
-    u_inc = u_max/(N_seg-1)
+    u_inc = u_max/(N_seg-1);
     T = 0:0.1:2.1*pi;
     
-    separators = cell(1, N_seg)
+    separators = cell(1, N_seg);
     
     for s = 1:N_seg
         U = (s-1)*u_inc;
-        separators{s} = plot3(ax, X(T, U), Y(T, U), Z(T,U), "LineWidth", 3, 'Color', [17 17 17]/255);
+        separators{s} = plot3(ax, X(T, U), Y(T, U), Z(T,U), "LineWidth", 3, 'Color', [17 17 17]/255, 'Visible', 'off');
     end
-    
-    view(ax,3)
     
 end
