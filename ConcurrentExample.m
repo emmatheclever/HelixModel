@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%% Snake Animation Example %%%%%%%%%%
+%%%%%%%%%%%%%% Drawing the Snake %%%%%%%%%%
 % Emma Waters, OSU LRAM, 7.29.2021
 % github.com/emmatheclever
 

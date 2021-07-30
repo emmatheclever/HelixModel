@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%% Snake Animation Example %%%%%%%%%%
+%%%%%%%%%%%%%% Animating a Single Muscle Actuating Fully %%%%%%%%%%
 % Emma Waters, OSU LRAM, 7.29.2021
 % github.com/emmatheclever
 
@@ -25,23 +25,15 @@ show_Body = 0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Cycling through one muscle contracting fully then relaxing fully over 100 frames:
-frames = cell(1, 40);
-m_lengths_by_frame = cell(size(frames));
-for c = 1:10
-    frames{c} = [(20-c)/20; (c+10)/20; (c)/20; (10-c)/20];
+% Cycling through one muscle contracting fully, then relaxing fully, over 100 frames:
+frames = cell(1, 50);
+m_lengths_by_frame = cell(size(frames))
+for c = 1:25
+    frames{c} = [0; 0; 0; c/25];
     m_lengths_by_frame{c} = calculateLengths(N_mcK, frames{c}, mcK_rest_length, mcK_act_length);
 end
-for c = 11:20
-    frames{c} = [(20-c)/20; (30-c)/20; (c)/20; (c-10)/20];
-    m_lengths_by_frame{c} = calculateLengths(N_mcK, frames{c}, mcK_rest_length, mcK_act_length);
-end
-for c = 21:30
-    frames{c} = [(c-20)/20; (30-c)/20; (40-c)/20; (c-10)/20];
-    m_lengths_by_frame{c} = calculateLengths(N_mcK, frames{c}, mcK_rest_length, mcK_act_length);
-end
-for c = 31:40
-    frames{c} = [(c-20)/20; (c-30)/20; (40-c)/20; (50-c)/20];
+for c = 26:50
+    frames{c} = [0; 0; 0; (50 - c)/25];
     m_lengths_by_frame{c} = calculateLengths(N_mcK, frames{c}, mcK_rest_length, mcK_act_length);
 end
 

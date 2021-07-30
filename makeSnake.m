@@ -1,4 +1,4 @@
-function [muscles, body] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, mcK_colors, c_coeffs, m_lengths, show_Body)
+function [muscle_Data, body, m_width] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body)
 %MAKESNAKE Calculates and plots snake for a set of contraction
 %coefficients.
 
@@ -13,7 +13,14 @@ function [muscles, body] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, mcK_col
         rot = 0;          % angle between m1 vector and normal vector
     else 
         rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a));
+        if R_vec(1,1) < 0
+            rot = 2*pi - rot;
+        end
     end
+    
+    rot_matrix = [cos(rot) -1*sin(rot) 0;
+                  sin(rot)  cos(rot)   0;
+                  0         0          1];
 
     [p, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_tot);
     h = p/(2*pi);
@@ -21,7 +28,7 @@ function [muscles, body] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, mcK_col
     u_max = double(l_v/sqrt((R-a)^2+h^2));
 
     %%% Helical Surface equations
-    [X, Y, Z] = getSurfaceFunction(R, h, a);
+    [X, Y, Z] = getSurfaceFunction(R, h, a, rot_matrix);
 
     %%%%%%% Plot Body Surface %%%%%%%%%%%%
     box(ax, 'on')
@@ -36,7 +43,7 @@ function [muscles, body] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, mcK_col
     end
 
     %%% Plotting muscles
-    muscles = plotMuscles(ax, N_mcK, mcK_colors, X, Y, Z, u_max, theta_m, rot, m_width);
+    muscle_Data = getMuscleData(N_mcK, X, Y, Z, u_max, rot, theta_m);
     
     
     grid on

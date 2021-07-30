@@ -1,4 +1,4 @@
-function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, mcK_rest, mcK_act, show_Body)
+function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by_frame, show_Body)
 % Animates snake upright over changing c_coeffs configurations, stored as
 % vectors in a cell array named "frames"
 
@@ -6,28 +6,33 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, mcK_rest, mc
     fig = figure();
     ax = createAxes(fig);
     
-    m_lengths = calculateLengths(N_mcK, frames{1}, mcK_rest, mcK_act);
     theta_m = 2*pi/N_mcK;
     m_vecs = getMuscleVecs(N_mcK, a, theta_m);
+    
+    muscles = cell(1, N_mcK);
 
-    [muscles, body] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, mcK_colors, frames{1}, m_lengths, show_Body)
+    [muscle_Data, body, m_width] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    
+    for m = 1:N_mcK
+        muscles{m} = plot3(ax, muscle_Data{m,1}, muscle_Data{m,2}, muscle_Data{m,3}, 'Color', mcK_colors{m}, 'LineWidth', m_width);
+    end
+    
     linkdata on
-    xlim([-10 10])
-    ylim([-10 10])
-    zlim([0 35])
+    
+    xlim([-8 8])
+    ylim([-8 8])
+    zlim([-5 35])
     
     for i = 1 : length(frames)
+        
         % Calculate updated data
-        m_lengths = calculateLengths(N_mcK, frames{i}, mcK_rest, mcK_act);
-        [new_ms, new_b] = makeSnake(ax, N_tot, N_seg, a,m_vecs, N_mcK, mcK_colors, frames{i}, m_lengths, show_Body);
+        [new_ms, new_b] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
 
         % Update figure muscle data
         for m = 1:N_mcK
-            muscles{m}.XData = new_ms{m}.XData;
-            muscles{m}.YData = new_ms{m}.YData;
-            muscles{m}.ZData = new_ms{m}.ZData;
-            muscles{m}.Color = new_ms{m}.Color;
-            muscles{m}.Visible = 'on';
+            muscles{m}.XData = new_ms{m,1};
+            muscles{m}.YData = new_ms{m,2};
+            muscles{m}.ZData = new_ms{m,3};
         end
         
         % Update figure body data

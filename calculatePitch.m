@@ -46,7 +46,7 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
         l2 = m_lengths{closer};
         
         if l1 == l2
-            l_v = l1
+            l_v = l1;
         else
             y = norm(m1 - R_vec);
             z = norm(m1 - m2);
