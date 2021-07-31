@@ -12,8 +12,8 @@ a =      1              % radius of separators
 N_mcK =  4              % # McKibben Muscles (must be at least 3)
 
 %McKibben Info - Note: order of muscles is counterclockwise.
-mcK_rest_length = 36    % length of unactuated muscle
-mcK_act_length  = 25  % length at maximum contraction
+mcK_rest_length = 40    % length of unactuated muscle
+mcK_act_length  = 28  % length at maximum contraction
 mcK_colors = {[0.9100, 0.4100, 0.1700], [0.788, 0.431, 0.431], [0.219, 0.309, 0.129],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25]}
 
 % Contraction coefficients for each muscle (column vector)
@@ -25,7 +25,7 @@ show_Body = 0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Cycling through one muscle contracting fully then relaxing fully over 100 frames:
+% Concurrent cycles:
 frames = cell(1, 40);
 m_lengths_by_frame = cell(size(frames));
 for c = 1:10

@@ -11,7 +11,17 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
     
     muscles = cell(1, N_mcK);
 
-    [muscle_Data, body, m_width] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    [muscle_Data, separators, m_width] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    
+    if show_Body == 0
+        body = cell(1, N_seg);
+        for s = 1:N_seg
+            body{s} = plot3(ax, separators{s,1}, separators{s,2}, separators{s,3}, "LineWidth", 3, 'Color', [17 17 17]/255);
+        end
+    else
+        body = fmesh(ax, body{1}, body{2}, body{3}, [0 2*pi 0 body{4}]);
+    end
+    
     
     for m = 1:N_mcK
         muscles{m} = plot3(ax, muscle_Data{m,1}, muscle_Data{m,2}, muscle_Data{m,3}, 'Color', mcK_colors{m}, 'LineWidth', m_width);
@@ -39,20 +49,17 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
         if show_Body == 0
             %body is an array of lines
             for s = 1:N_seg
-                body{s}.XData = new_b{s}.XData;
-                body{s}.YData = new_b{s}.YData;
-                body{s}.ZData = new_b{s}.ZData;
-                body{s}.Color = new_b{s}.Color;
-                body{s}.Visible = 'on';
+                body{s}.XData = new_b{s,1};
+                body{s}.YData = new_b{s,2};
+                body{s}.ZData = new_b{s,3};
             end
             
         else
             % body is a surface object
-            body.XData = new_b.XData;
-            body.YData = new_b.YData;
-            body.ZData = new_b.ZData;
-            body.CData = new_b.CData;
-            body.Visible = 'on';
+            body.XFunction = new_b{1};
+            body.YFunction = new_b{2};
+            body.ZFunction = new_b{3};
+            body.VRange = [0 new_b{4}];
         end
 
         % Extract current frame as an image

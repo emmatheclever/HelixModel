@@ -35,11 +35,11 @@ function [muscle_Data, body, m_width] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N
     hold on
     
     if show_Body == 0
-        body = plotSnakeSeparators(ax, X, Y, Z, u_max, N_seg);
+        body = getSeparatorData(X, Y, Z, u_max, N_seg);
         m_width = 6;
     else
-        body = fsurf(ax, X, Y, Z, [0 2*pi 0 u_max], 'Visible', 'off');
-        m_width = 3;
+        body = {X, Y, Z, u_max};
+        m_width = 2;
     end
 
     %%% Plotting muscles

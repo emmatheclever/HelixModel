@@ -35,7 +35,7 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
     
     
     %Find length of virtual muscle
-    if closer == 0                     %Easy if there's already a muscle on the normal vector
+    if closer == 0 | R == 0                     %Easy if there's already a muscle on the normal vector
         l_v = m_lengths{closest};
         
     else                               %Otherwise we have to do some weird geometry things
@@ -48,8 +48,8 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
         if l1 == l2
             l_v = l1;
         else
-            y = norm(m1 - R_vec);
-            z = norm(m1 - m2);
+            y = min1*a;
+            z = min2*a;
 
             x = l1*z/(l2-l1);
 

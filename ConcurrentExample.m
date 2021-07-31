@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%% Drawing the Snake %%%%%%%%%%
+%%%%%%%%%%%%%% Example of Concurrent Actuation Pattern %%%%%%%%%%
 % Emma Waters, OSU LRAM, 7.29.2021
 % github.com/emmatheclever
 
