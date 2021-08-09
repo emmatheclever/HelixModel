@@ -3,7 +3,6 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
 %number of turns.  If there is no muscle intersecting the separation disk
 %along the normal vector of the base curve, a "virtual muscle" with
 %estimated length is used.
-%   Detailed explanation goes here
 
     %Find closest muscle vectors to R_vec:
     min1 = Inf;
@@ -35,12 +34,13 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
     
     
     %Find length of virtual muscle
-    if closer == 0 | R == 0                     %Easy if there's already a muscle on the normal vector
+    if  R < 1e-13
+        l_v = min(cell2mat(m_lengths));
+        
+    elseif closer == 0                   %Easy if there's already a muscle on the normal vector
         l_v = m_lengths{closest};
         
     else                               %Otherwise we have to do some weird geometry things
-        m1 = m_vecs(:, closest);
-        m2 = m_vecs(:, closer);
         
         l1 = m_lengths{closest};
         l2 = m_lengths{closer};
@@ -60,7 +60,7 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
     R_v = a - R;
     
     syms p positive
-    p_sol = solve(l_v == N_tot*sqrt(p^2+(2*pi*R_v)^2), p, 'Real', true);
+    p_sol = solve(l_v == N_tot*sqrt(p^2+(2*pi*R_v)^2), p, "Real", true);
 
 end
 

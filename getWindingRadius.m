@@ -8,7 +8,6 @@ function R_vec = getWindingRadius(m_vecs, c_coeffs)
         
     else
         R_vec = (m_vecs*square_c)./sum(c_coeffs);
-        
     end
     
 end

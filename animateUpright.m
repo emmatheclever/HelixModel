@@ -1,4 +1,4 @@
-function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by_frame, show_Body)
+function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by_frame, show_Body, rest)
 % Animates snake upright over changing c_coeffs configurations, stored as
 % vectors in a cell array named "frames"
 
@@ -6,12 +6,20 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
     fig = figure();
     ax = createAxes(fig);
     
+    linkdata on
+    grid on
+    box(ax, 'on')
+    hold on
+    view(ax,3)
+    
     theta_m = 2*pi/N_mcK;
     m_vecs = getMuscleVecs(N_mcK, a, theta_m);
-    
+  
     muscles = cell(1, N_mcK);
 
-    [muscle_Data, separators, m_width] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    [muscle_Data, separators, m_width, Z] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    max_Z = Z;
+    min_Z = Z;
     
     if show_Body == 0
         body = cell(1, N_seg);
@@ -19,7 +27,7 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
             body{s} = plot3(ax, separators{s,1}, separators{s,2}, separators{s,3}, "LineWidth", 3, 'Color', [17 17 17]/255);
         end
     else
-        body = fmesh(ax, body{1}, body{2}, body{3}, [0 2*pi 0 body{4}]);
+        body = fmesh(ax, separators{1}, separators{2}, separators{3}, [0 2*pi 0 separators{4}]);
     end
     
     
@@ -27,17 +35,26 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
         muscles{m} = plot3(ax, muscle_Data{m,1}, muscle_Data{m,2}, muscle_Data{m,3}, 'Color', mcK_colors{m}, 'LineWidth', m_width);
     end
     
-    linkdata on
     
-    xlim([-8 8])
-    ylim([-8 8])
-    zlim([-5 35])
+    syms p positive
+    p_sol = solve(rest == N_tot*sqrt(p^2+(2*pi*a)^2), p);
+    s_len = double(p_sol*N_tot)*1.1;
+    
+    xlim([-a*4 a*4])
+    ylim([-a*4 a*4])
+    zlim([-a*2 s_len])
     
     for i = 1 : length(frames)
         
         % Calculate updated data
-        [new_ms, new_b] = makeSnake(ax, N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
-
+        [new_ms, new_b, ~, Z] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
+        if Z > max_Z
+            max_Z = Z;
+        end
+        if Z < min_Z
+            min_Z = Z;
+        end
+        
         % Update figure muscle data
         for m = 1:N_mcK
             muscles{m}.XData = new_ms{m,1};
@@ -80,4 +97,6 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
     end
     imwrite(mov, map, 'animation.gif', 'DelayTime', 0, 'LoopCount', inf)
     
+    disp(double(min_Z))
+    disp(double(max_Z))
 end
