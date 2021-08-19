@@ -60,7 +60,7 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
     R_v = a - R;
     
     syms p positive
-    p_sol = solve(l_v == N_tot*sqrt(p^2+(2*pi*R_v)^2), p, "Real", true);
+    p_sol = double(solve(l_v == N_tot*sqrt(p^2+(2*pi*R_v)^2), p, "Real", true));
 
 end
 

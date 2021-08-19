@@ -1,23 +1,23 @@
 %%%%% Plot a single configuration %%%%%%%%%%
-% Emma Waters, OSU LRAM, 8.5.2021
+% Emma Waters, OSU LRAM, 8.8.2021
 % github.com/emmatheclever
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%  User Input here: %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defining Constants
-N_tot =  1.7            % # Rotations
-N_seg =  6              % # Separators
-a =      1              % radius of separators
+N_tot =  0.3           % # Rotations
+N_seg =  3              % # Separators
+a =      10              % radius of separators
 N_mcK =  4              % # McKibben Muscles
 
 %McKibben Info - Note: order of muscles is counterclockwise.
 mcK_rest_length = 40    % length of unactuated muscle
 mcK_act_length  = 28  % length at maximum contraction
-mcK_colors = {[0.9100, 0.4100, 0.1700], [0.788, 0.431, 0.431], [0.219, 0.309, 0.129],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25],[0.8, 0, 0], [0.654, 1, 0.121], [0, 0.878, 0.682],[0, 0.250, 0.878],[0.443, 0.258, 0.878], [0.8, 0.180, 0.725]};
+mcK_colors = {[0.4, 0.435, 0.521],[0.4, 0.435, 0.521],[0.4, 0.435, 0.521],[0.4, 0.435, 0.521]};
 
 % Contraction coefficients for each muscle (column vector)
-c_coeffs = [0.5;0;0.5;0]
+c_coeffs = [0;1;0;0]
 
 %%% Do you want to show body surface?
 show_Body = 0
@@ -27,9 +27,29 @@ show_Body = 0
 
 theta_m = 2*pi/N_mcK;
 m_vecs = getMuscleVecs(N_mcK, a, theta_m);
-m_lengths = calculateLengths(N_mcK, c_coeffs, mcK_rest_length, mcK_act_length)
+m_lengths = calculateLengths(N_mcK, c_coeffs, mcK_rest_length, mcK_act_length);
 
-[muscle_Data, separators, m_width] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body);
+[muscle_Data, separators, m_width, ~, p] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body);
+R_vec = getWindingRadius(m_vecs, c_coeffs);
+R = norm(R_vec);
+
+if R == 0
+    rot = 0;          % angle between m1 vector and R_vec
+else 
+    rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a));
+    if R_vec(1,1) < 0
+        rot = 2*pi - rot;
+    end
+end
+
+rot_matrix = [cos(rot) -1*sin(rot) 0;
+              sin(rot)  cos(rot)   0;
+              0         0          1];
+
+[X, Y, Z] = getSurfaceFunction(R, p/(2*pi), a, rot_matrix);
+
+theta_s = getBaseOrientation(a, rot, X,Y,Z);
+disp(theta_s/pi);
 
 fig = figure();
 ax = createAxes(fig);
@@ -59,4 +79,3 @@ muscles = cell(1, N_mcK);
 for m = 1:N_mcK
     muscles{m} = plot3(ax, muscle_Data{m,1}, muscle_Data{m,2}, muscle_Data{m,3}, 'Color', mcK_colors{m}, 'LineWidth', m_width);
 end
-

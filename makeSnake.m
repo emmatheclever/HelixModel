@@ -1,4 +1,4 @@
-function [muscle_Data, body, m_width, Z_max] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body)
+function [muscle_Data, body, m_width, Z_max, p, R_vec] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body)
 %MAKESNAKE Calculates and plots snake for a set of contraction
 %coefficients.
 
@@ -10,7 +10,7 @@ function [muscle_Data, body, m_width, Z_max] = makeSnake(N_tot, N_seg, a, m_vecs
     R_vec = getWindingRadius(m_vecs, c_coeffs);
     R = norm(R_vec);
     if R == 0
-        rot = 0;          % angle between m1 vector and normal vector
+        rot = 0;          % angle between m1 vector and R_vec
     else 
         rot = acos(dot(R_vec, m_vecs(:,1)) / (R * a));
         if R_vec(1,1) < 0
