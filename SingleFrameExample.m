@@ -14,10 +14,10 @@ N_mcK =  4              % # McKibben Muscles
 %McKibben Info - Note: order of muscles is counterclockwise.
 mcK_rest_length = 40    % length of unactuated muscle
 mcK_act_length  = 28  % length at maximum contraction
-mcK_colors = {[0.9100, 0.4100, 0.1700], [0.788, 0.431, 0.431], [0.219, 0.309, 0.129],[0.25, 0.25, 0.25],[0.25, 0.25, 0.25],[0.8, 0, 0], [0.654, 1, 0.121], [0, 0.878, 0.682],[0, 0.250, 0.878],[0.443, 0.258, 0.878], [0.8, 0.180, 0.725]};
+mcK_colors = {[0, 0, 0], [0.843, 0.247, 0.035], [0.654, 0.674, 0.635],[0, 0.521, 0.607],[0.25, 0.25, 0.25],[0.8, 0, 0], [0.654, 1, 0.121], [0, 0.878, 0.682],[0, 0.250, 0.878],[0.443, 0.258, 0.878], [0.8, 0.180, 0.725]};
 
 % Contraction coefficients for each muscle (column vector)
-c_coeffs = [0.5;0;0.5;0]
+c_coeffs = [1;0.5;0;0]
 
 %%% Do you want to show body surface?
 show_Body = 0
@@ -42,9 +42,9 @@ syms p positive
 p_sol = solve(mcK_rest_length == N_tot*sqrt(p^2+(2*pi*a)^2), p);
 s_len = double(p_sol*N_tot)*1.1;
 
-xlim([-a*4 a*4])
+zlim([-a*4 a*4])
 ylim([-a*4 a*4])
-zlim([-a*2 s_len])
+xlim([-a*2 35])
 
 if show_Body == 0
     body = cell(1, N_seg);
