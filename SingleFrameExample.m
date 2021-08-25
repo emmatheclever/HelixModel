@@ -29,7 +29,7 @@ theta_m = 2*pi/N_mcK;
 m_vecs = getMuscleVecs(N_mcK, a, theta_m);
 m_lengths = calculateLengths(N_mcK, c_coeffs, mcK_rest_length, mcK_act_length)
 
-[muscle_Data, separators, m_width] = makeSnakeTest(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body);
+[muscle_Data, separators, m_width] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body);
 
 fig = figure();
 ax = createAxes(fig);
