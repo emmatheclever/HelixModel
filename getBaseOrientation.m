@@ -1,6 +1,7 @@
 function theta_s = getBaseOrientation(a, rot, X,Y,Z)
 %GETBASEORIENTATION Calculates the rotation and center of the base
-%separator disk (only used for generating data for Blender)
+%separator disk (only used for generating data for Blender) (**math might not
+%be correct**)
 
     rot_Z = [cos(rot) -1*sin(rot) 0;
              sin(rot)  cos(rot)   0;

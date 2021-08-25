@@ -1,6 +1,6 @@
 function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by_frame, show_Body, rest)
-% Animates snake upright over changing c_coeffs configurations, stored as
-% vectors in a cell array named "frames"
+% Animates snake over changing c_coeffs configurations, stored as
+% vectors in a cell array named "frames".
 
     % Initialize line
     fig = figure();

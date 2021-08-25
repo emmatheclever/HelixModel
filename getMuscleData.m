@@ -1,8 +1,6 @@
 function muscle_Data = getMuscleData(N_mcK, X, Y, Z, u_max, rot, theta_m)
-%PLOTMUSCLES 
-%   Detailed explanation goes here
+%getMuscleData  returns a set of points along each muscle for plotting.
 
-    
     u_inc = u_max/(100);
     u_vals = 0:u_inc:u_max;
     

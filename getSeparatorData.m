@@ -1,6 +1,6 @@
 function separators = getSeparatorData(X, Y, Z, u_max, N_seg)
-%plotSnakeSeparators gets paramterizations for the specified separator
-%disks, evenly spaced.
+% getSeparatorData  gets plottable set of points for the specified number of 
+% separator disks, evenly spaced.
 %
 
     u_inc = u_max/(N_seg-1);

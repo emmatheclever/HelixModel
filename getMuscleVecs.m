@@ -1,5 +1,5 @@
 function m_vecs = getMuscleVecs(N_mcK, a, theta_m)
-%PLACEMUSCLES calculates muscle vectors, first muscle at [0; a], order is
+% GETMUSCLEVECS calculates muscle vectors, first muscle at [0; a], order is
 %   counterclockwise
 %
 %   N_mcK   number of mcKibben muscles
