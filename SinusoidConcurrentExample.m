@@ -9,7 +9,7 @@
 N_tot =  1.7            % # Rotations
 N_seg =  6              % # Separators
 a =      1              % radius of separators
-N_mcK =  7              % # McKibben Muscles
+N_mcK =  4              % # McKibben Muscles
 
 %McKibben Info - Note: order of muscles is counterclockwise.
 mcK_rest_length = 40    % length of unactuated muscle

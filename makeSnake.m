@@ -1,4 +1,4 @@
-function [muscle_Data, body, m_width, Z_max] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body)
+function [muscle_Data, body, m_width, X_max] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body)
 %MAKESNAKE Calculates and plots snake for a set of contraction
 %coefficients.
 
@@ -18,9 +18,9 @@ function [muscle_Data, body, m_width, Z_max] = makeSnake(N_tot, N_seg, a, m_vecs
         end
     end
     
-    rot_matrix = [cos(rot) -1*sin(rot) 0;
-                  sin(rot)  cos(rot)   0;
-                  0         0          1];
+    rot_matrix = [1     0       0;
+                  0 cos(-rot) -1*sin(-rot);
+                  0 sin(-rot)  cos(-rot)];
 
     [p, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_tot);
     h = double(p/(2*pi));
@@ -29,7 +29,7 @@ function [muscle_Data, body, m_width, Z_max] = makeSnake(N_tot, N_seg, a, m_vecs
 
     %%% Helical Surface equations
     [X, Y, Z] = getSurfaceFunction(R, h, a, rot_matrix);
-    Z_max = Z(0,u_max);
+    X_max = X(0,u_max);
 
     %%%%%%% Body Surface %%%%%%%%%%%%
     if show_Body == 0

@@ -17,9 +17,9 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
   
     muscles = cell(1, N_mcK);
 
-    [muscle_Data, separators, m_width, Z] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
-    max_Z = Z;
-    min_Z = Z;
+    [muscle_Data, separators, m_width, X] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    max_X = X;
+    min_X = X;
     
     if show_Body == 0
         body = cell(1, N_seg);
@@ -40,19 +40,19 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
     p_sol = solve(rest == N_tot*sqrt(p^2+(2*pi*a)^2), p);
     s_len = double(p_sol*N_tot)*1.1;
     
-    xlim([-a*4 a*4])
+    zlim([-a*4 a*4])
     ylim([-a*4 a*4])
-    zlim([-a*2 s_len])
+    xlim([-a*2 s_len])
     
     for i = 1 : length(frames)
         
         % Calculate updated data
-        [new_ms, new_b, ~, Z] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
-        if Z > max_Z
-            max_Z = Z;
+        [new_ms, new_b, ~, X] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
+        if X > max_X
+            max_X = X;
         end
-        if Z < min_Z
-            min_Z = Z;
+        if X < min_X
+            min_X = X;
         end
         
         % Update figure muscle data
@@ -97,6 +97,6 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
     end
     imwrite(mov, map, 'animation.gif', 'DelayTime', 0, 'LoopCount', inf)
     
-    disp(double(min_Z))
-    disp(double(max_Z))
+    disp(double(min_X))
+    disp(double(max_X))
 end
