@@ -53,7 +53,7 @@ function [p_sol, l_v] = calculatePitch(R_vec, R, a, N_mcK, m_vecs, m_lengths, N_
 
             x = l1*z/(l2-l1);
 
-            l_v = l1*(x+y)/x;
+            l_v = real(l1*(x+y)/x);
         end
     end
     

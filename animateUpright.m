@@ -17,7 +17,7 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
   
     muscles = cell(1, N_mcK);
 
-    [muscle_Data, separators, m_width, X] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
+    [muscle_Data, separators, m_width, X] = makeSnakeTest(N_tot, N_seg, a, m_vecs, N_mcK, frames{1}, m_lengths_by_frame{1}, show_Body);
     max_X = X;
     min_X = X;
     
@@ -40,14 +40,14 @@ function animateUpright(N_tot, N_seg, a, N_mcK, mcK_colors, frames, m_lengths_by
     p_sol = solve(rest == N_tot*sqrt(p^2+(2*pi*a)^2), p);
     s_len = double(p_sol*N_tot)*1.1;
     
-    zlim([-a*4 a*4])
-    ylim([-a*4 a*4])
+    zlim([-a*10 a*10])
+    ylim([-a*10 a*10])
     xlim([-a*2 s_len])
     
     for i = 1 : length(frames)
         
         % Calculate updated data
-        [new_ms, new_b, ~, X] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
+        [new_ms, new_b, ~, X] = makeSnakeTest(N_tot, N_seg, a, m_vecs, N_mcK, frames{i}, m_lengths_by_frame{i}, show_Body);
         if X > max_X
             max_X = X;
         end

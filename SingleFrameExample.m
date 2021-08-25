@@ -6,18 +6,18 @@
 %%%%  User Input here: %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defining Constants
-N_tot =  1.7            % # Rotations
+N_tot =  3            % # Rotations
 N_seg =  6              % # Separators
-a =      1              % radius of separators
-N_mcK =  4              % # McKibben Muscles
+a =      1             % radius of separators
+N_mcK =  4             % # McKibben Muscles
 
 %McKibben Info - Note: order of muscles is counterclockwise.
-mcK_rest_length = 40    % length of unactuated muscle
+mcK_rest_length = 36    % length of unactuated muscle
 mcK_act_length  = 28  % length at maximum contraction
 mcK_colors = {[0, 0, 0], [0.843, 0.247, 0.035], [0.654, 0.674, 0.635],[0, 0.521, 0.607],[0.25, 0.25, 0.25],[0.8, 0, 0], [0.654, 1, 0.121], [0, 0.878, 0.682],[0, 0.250, 0.878],[0.443, 0.258, 0.878], [0.8, 0.180, 0.725]};
 
 % Contraction coefficients for each muscle (column vector)
-c_coeffs = [1;0.5;0;0]
+c_coeffs = [1;1;0;0]
 
 %%% Do you want to show body surface?
 show_Body = 0
@@ -29,7 +29,7 @@ theta_m = 2*pi/N_mcK;
 m_vecs = getMuscleVecs(N_mcK, a, theta_m);
 m_lengths = calculateLengths(N_mcK, c_coeffs, mcK_rest_length, mcK_act_length)
 
-[muscle_Data, separators, m_width] = makeSnake(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body);
+[muscle_Data, separators, m_width] = makeSnakeTest(N_tot, N_seg, a, m_vecs, N_mcK, c_coeffs, m_lengths, show_Body);
 
 fig = figure();
 ax = createAxes(fig);

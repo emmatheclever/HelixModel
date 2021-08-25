@@ -6,13 +6,13 @@
 %%%%  User Input here: %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defining Constants
-N_tot =  1.7            % # Rotations
-N_seg =  6              % # Separators
-a =      1              % radius of separators
+N_tot =  2.4            % # Rotations
+N_seg =  11              % # Separators
+a =      0.75              % radius of separators
 N_mcK =  4              % # McKibben Muscles
 
 %McKibben Info - Note: order of muscles is counterclockwise.
-mcK_rest_length = 40    % length of unactuated muscle
+mcK_rest_length = 36    % length of unactuated muscle
 mcK_act_length  = 28  % length at maximum contraction
 mcK_colors = {[0.8, 0, 0], [0.654, 1, 0.121],[ 0.513, 0.427, 0.427], [0, 0.878, 0.682],[0, 0.250, 0.878],[0.513, 0.427, 0.427] ,[0.443, 0.258, 0.878], [0.513, 0.427, 0.42], [0.8, 0.180, 0.725]}
 
